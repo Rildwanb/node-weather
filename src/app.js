@@ -46,21 +46,22 @@ app.get('/weather', (req,res) => {
             error: 'no address provided'
         })
     }
-    geocode(req.query.address, (error,data)=>{
+    geocode(req.query.address, (error, { latitude, longitude, location } = {}) => {
         if(error){
             return res.send({
-                error: 'freaking Error communicating with server'
+                error: 'Error communicating with server'
             })
         }
-            forecast(data.latitude, data.longitude, (error, forecastData) => {
+            forecast(latitude, longitude, (error, forecastData) => {
                 if (error) {
                     return res.send({
-                        error: 'notjing to see here'
+                        error: 'Nothing to see here'
                     })
                 }
                 res.send({
                     forecast: forecastData,
-                    location: data.location
+                    location,
+                    address: req.query.address
                 })
             
     })
